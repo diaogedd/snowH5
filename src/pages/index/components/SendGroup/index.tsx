@@ -1,7 +1,10 @@
 import React from 'react';
 import { Tabs } from 'antd-mobile';
 import CarAndRoom from './CarAndRoom';
+import CarForm from './CarForm';
+import RoomForm from './RoomForm';
 import styles from './index.module.less';
+
 const SendGroup: React.FC = () => {
   return (
     <Tabs defaultActiveKey="car" className={styles.tabs} >
@@ -9,10 +12,10 @@ const SendGroup: React.FC = () => {
         <CarAndRoom />
       </Tabs.Tab>
       <Tabs.Tab title="车" key="carOnly">
-        {/* 车表单，可后续实现 */}
+        <CarForm />
       </Tabs.Tab>
       <Tabs.Tab title="房" key="roomOnly">
-        {/* 房表单，可后续实现 */}
+        <RoomForm />
       </Tabs.Tab>
     </Tabs>
   );

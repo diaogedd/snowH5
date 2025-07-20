@@ -20,11 +20,11 @@ const CarAndRoom: React.FC = () => {
       {/* 地点 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'center' }}>
         <span className={styles['car-room-label']}>地点：</span>
-        <Form.Item name="from" style={{ marginBottom: 0 }}>
+        <Form.Item name="from">
           <Input placeholder="晋中市" className={styles['car-room-input']} />
         </Form.Item>
         <button className={styles['car-room-exchange-btn']} type="button">⇄</button>
-        <Form.Item name="to" style={{ marginBottom: 0 }}>
+        <Form.Item name="to">
           <Input placeholder="自治区直辖县" className={styles['car-room-input']} />
         </Form.Item>
         <Switch style={{ marginLeft: 8 }} />
@@ -33,7 +33,7 @@ const CarAndRoom: React.FC = () => {
       {/* 时间 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'center' }}>
         <span className={styles['car-room-label']}>时间：</span>
-        <Form.Item name="date" style={{ flex: 1, marginBottom: 0 }} trigger="onConfirm" onClick={(_, ref) => ref.current?.open()}>
+        <Form.Item name="date" style={{ flex: 1 }} trigger="onConfirm" onClick={(_, ref) => ref.current?.open()}>
           <DatePicker precision="minute" min={new Date()}>
             {value => value ? dayjs(value).format('YYYY/MM/DD  HH.mm') : '2025/09/02  8.00'}
           </DatePicker>
@@ -41,59 +41,68 @@ const CarAndRoom: React.FC = () => {
       </div>
       {/* 出行 */}
       <div style={{ marginTop: 8 }}>
-        <div className={styles['car-room-row']} style={{ marginBottom: 0 }}>
+        <div className={styles['car-room-row']}>
           <span className={styles['car-room-label']}>出行：</span>
         </div>
         <div className={styles['car-room-row']} style={{ marginTop: 0 }}>
-          <Form.Item name="carType" style={{ flex: 2, marginBottom: 0 }}>
+          <Form.Item name="carType" style={{ flex: 1 }}>
             <Input placeholder="输入车型" className={styles['car-room-input']} />
           </Form.Item>
-          <Form.Item name="carPrice" style={{ flex: 1, margin: '0 8px', minWidth: 50, marginBottom: 0 }}>
+          <Form.Item name="carPrice" style={{ flex: 1, margin: '0 8px', minWidth: 50 }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Input placeholder="请输入价格" className={styles['car-room-input']} />
               <span style={{ marginLeft: 4, color: '#888' }}>￥</span>
             </div>
           </Form.Item>
-          <Form.Item name="carSeats" style={{ flex: 1, marginBottom: 0, minWidth: 60 }}>
-            <Input placeholder="几座车" className={styles['car-room-input']} />
-            <span style={{ marginLeft: 4, color: '#888' }}>座</span>
+          <Form.Item name="carSeats" style={{ flex: 1, minWidth: 60 }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Input placeholder="几座车" className={styles['car-room-input']} />
+              <span style={{ marginLeft: 4, color: '#888' }}>座</span>
+            </div>
           </Form.Item>
         </div>
       </div>
       {/* 住所 */}
       <div style={{ marginTop: 8 }}>
-        <div className={styles['car-room-row']} style={{ marginBottom: 0 }}>
+        <div className={styles['car-room-row']}>
           <span className={styles['car-room-label']}>住所：</span>
         </div>
         <div className={styles['car-room-row']} style={{ marginTop: 0 }}>
-          <Form.Item name="roomName" style={{ flex: 2, marginBottom: 0 }}>
+          <Form.Item name="roomName" style={{ flex: 1 }}>
             <Input placeholder="店名" className={styles['car-room-input']} />
           </Form.Item>
-          <Form.Item name="roomPrice" style={{ flex: 1, margin: '0 8px', minWidth: 50, marginBottom: 0 }}>
+          <Form.Item name="roomPrice" style={{ flex: 1, margin: '0 8px', minWidth: 50 }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Input placeholder="价格" className={styles['car-room-input']} />
               <span style={{ marginLeft: 4, color: '#888' }}>￥</span>
             </div>
           </Form.Item>
-          <Form.Item name="roomPeople" style={{ flex: 1, marginBottom: 0, width: 30 }}>
-            <Input placeholder="几人房" className={styles['car-room-input']} />
-            <span style={{ marginLeft: 4, color: '#888' }}>人</span>
+          <Form.Item name="roomPeople" style={{ flex: 1, width: 30 }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Input placeholder="几人房" className={styles['car-room-input']} />
+              <span style={{ marginLeft: 4, color: '#888' }}>人</span>
+            </div>
+
           </Form.Item>
         </div>
       </div>
       {/* 可拼人数 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'center', marginTop: 8 }}>
         <span className={styles['car-room-label']}>可拼</span>
-        <Form.Item name="peopleNum" initialValue={1} style={{ marginBottom: 0 }}>
-          <Input type="number" min={1} max={100} style={{ width: 60 }} className={styles['car-room-input']}
-          />
+        <Form.Item name="peopleNum" initialValue={1}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Input type="number" min={1} max={100} style={{ width: 60 }} className={styles['car-room-input']}
+            />
+            <span style={{ marginLeft: 4, color: '#888' }}>人</span>
+          </div>
+
         </Form.Item>
 
       </div>
       {/* 备注 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'flex-start', marginTop: 8 }}>
         <span className={styles['car-room-label']} style={{ marginTop: 8 }}>备注：</span>
-        <Form.Item name="remark" style={{ flex: 1, marginBottom: 0 }}>
+        <Form.Item name="remark" style={{ flex: 1 }}>
           <TextArea
             placeholder=""
             className={styles['car-room-textarea']}

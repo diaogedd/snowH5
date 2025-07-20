@@ -29,7 +29,49 @@ interface GroupItem {
 interface GroupListProps {
   groupList: GroupItem[];
 }
-const GroupList: React.FC<GroupListProps> = ({ groupList }) => {
+const groupList = [
+  {
+    id: 1,
+    type: "car",
+    title: "小花发起的拼车",
+    location: "111 → 222",
+    time: "2025.7.11 8:00",
+    people: 4,
+    left: 1,
+    remark: "喜欢胜的",
+  },
+  {
+    id: 1,
+    type: "car",
+    title: "小花发起的拼车",
+    location: "111 → 222",
+    time: "2025.7.11 8:00",
+    people: 4,
+    left: 1,
+    remark: "喜欢胜的",
+  },
+  {
+    id: 2,
+    type: "room",
+    title: "小6发起的拼房",
+    location: "北京 我爱我家民宿soft（墨尔本店）",
+    time: "2025.7.11~7.12 1晚/1间",
+    people: 2,
+    left: 1,
+    remark: "喜欢邂逅的",
+  },
+  {
+    id: 3,
+    type: "car-room",
+    title: "小绿发起的拼车房",
+    location: "111 → 222",
+    time: "2025.7.11 8:00",
+    carType: "坦克300",
+    left: 1,
+    remark: "",
+  },
+];
+const GroupList = () => {
   return (
     <>
       <Form
