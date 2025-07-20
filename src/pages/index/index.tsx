@@ -1,28 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  DatePicker,
-  Selector,
-  Button,
   TabBar,
-  Badge,
   CapsuleTabs,
-  Checkbox,
-  Switch,
-  Form,
-  Input,
-  Space,
-  Radio,
 } from "antd-mobile";
 import { UserOutline, AddCircleOutline, TeamOutline } from "antd-mobile-icons";
 import styles from "./index.module.less";
-import dayjs from "dayjs";
+
 import GroupList from "./components/GroupList";
 import SendGroup from "./components/SendGroup"
 import Me from './components/me/index'
+import { apiFetch } from '../../auth/oidc';
 
 
 const IndexPage: React.FC = () => {
   const [activeKey, setActiveKey] = useState("1");
+
+  useEffect(() => {
+    console.log('apiFetch');
+
+    apiFetch('/api/identity/users')
+  }, []);
+
   return (
     <div className={styles["group-page"]}>
       {/* 顶部Banner */}
