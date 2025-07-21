@@ -14,24 +14,20 @@ export const userManager = new UserManager(oidcConfig);
 
 export async function ensureLogin() {
   const user = await userManager.getUser();
-
+  console.log('user',user);
   if (!user || user.expired) {
     userManager.signinRedirect();
+  }else{
+
   }
   return {
     access_token: user?.access_token,
   };
 }
 
-export async function apiFetch(url: string, options: RequestInit = {}) {
-  const user = await userManager.getUser();
-  const token = user?.access_token;
-  const host = "https://devapi.konsoft.top";
-  return fetch(host + url, {
-    ...options,
-    headers: {
-      ...(options.headers || {}),
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
+// 静默刷新回调页面（如 public/silent-renew.html）中调用：
+userManager.signinSilentCallback();
+
+
+
+
