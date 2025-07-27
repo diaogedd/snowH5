@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Input, Button, Form, TextArea, CalendarPicker } from 'antd-mobile';
 import styles from './CarAndRoom.module.less';
 import dayjs from 'dayjs';
+import { createOrUpdateRoom } from '../../../../api/api'
 
 const RoomForm: React.FC = () => {
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
@@ -15,9 +16,16 @@ const RoomForm: React.FC = () => {
         const formatted = {
           ...values,
           dateRange: dateRange
-            ? `${dayjs(dateRange[0]).format('YYYY/MM/DD')} ~ ${dayjs(dateRange[1]).format('YYYY/MM/DD')}`
+            ? `${dayjs(dateRange[0]).format('YYYY-MM-DD')} ~ ${dayjs(dateRange[1]).format('YYYY-MM-DD')}`
+            : undefined,
+          checkInTime: dateRange
+            ? `${dayjs(dateRange[0]).format('YYYY-MM-DD')}`
+            : undefined,
+          checkOutTime: dateRange
+            ? `${dayjs(dateRange[1]).format('YYYY-MM-DD')}`
             : undefined,
         };
+        createOrUpdateRoom(formatted);
         console.log('发布表单提交:', formatted);
       }}
       footer={null}
@@ -25,10 +33,10 @@ const RoomForm: React.FC = () => {
       {/* 地点 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'center' }}>
         <span className={styles['car-room-label']}>地点：</span>
-        <Form.Item name="from">
+        <Form.Item name="roomLocation">
           <Input placeholder="城市/区域" className={styles['car-room-input']} />
         </Form.Item>
-        <Form.Item name="to">
+        <Form.Item name="roomName">
           <Input placeholder="酒店名" className={styles['car-room-input']} />
         </Form.Item>
       </div>
@@ -42,7 +50,7 @@ const RoomForm: React.FC = () => {
             onClick={() => setCalendarVisible(true)}
           >
             {dateRange
-              ? `${dayjs(dateRange[0]).format('YYYY/MM/DD')} ~ ${dayjs(dateRange[1]).format('YYYY/MM/DD')}`
+              ? `${dayjs(dateRange[0]).format('YYYY-MM-DD')} ~ ${dayjs(dateRange[1]).format('YYYY-MM-DD')}`
               : '请选择入住和离开日期'}
           </div>
           <CalendarPicker
@@ -61,7 +69,7 @@ const RoomForm: React.FC = () => {
       {/* 可拼人数 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'center', marginTop: 8 }}>
         <span className={styles['car-room-label']}>可拼</span>
-        <Form.Item name="peopleNum" initialValue={1}>
+        <Form.Item name="targetNumber" initialValue={1}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Input type="number" min={1} max={100} style={{ width: 60 }} className={styles['car-room-input']} />
             <span style={{ marginLeft: 4, color: '#888' }}>人</span>
@@ -71,7 +79,7 @@ const RoomForm: React.FC = () => {
       {/* 备注 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'flex-start', marginTop: 8 }}>
         <span className={styles['car-room-label']} style={{ marginTop: 8 }}>备注：</span>
-        <Form.Item name="remark" style={{ flex: 1 }}>
+        <Form.Item name="remarks" style={{ flex: 1 }}>
           <TextArea
             placeholder=""
             className={styles['car-room-textarea']}
@@ -83,7 +91,7 @@ const RoomForm: React.FC = () => {
       {/* 按钮 */}
       <div className={styles['car-room-btns']}>
         <Button color='primary' type="submit">立即发布</Button>
-        <Button color='default' type="button">暂存</Button>
+        {/* <Button color='default' type="button">暂存</Button> */}
       </div>
     </Form>
   );
