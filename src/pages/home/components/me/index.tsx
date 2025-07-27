@@ -25,8 +25,8 @@ const Me: React.FC = () => {
       </div>
       <div className={styles.btnList}>
         <Button color='primary' className={styles.meBtn} onClick={() => navigate('/me-message')}>个人信息</Button>
-        <Button color='primary' className={styles.meBtn}>我的发团</Button>
-        <Button color='primary' className={styles.meBtn}>我的拼团</Button>
+        <Button color='primary' className={styles.meBtn} onClick={() => navigate('/me-group')}>我的发团</Button>
+        <Button color='primary' className={styles.meBtn} onClick={() => navigate('/my-groups')}>我的拼团</Button>
       </div>
     </div>
   );

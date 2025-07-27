@@ -6,7 +6,7 @@ import {
 import { UserOutline, AddCircleOutline, TeamOutline } from "antd-mobile-icons";
 import styles from "./index.module.less";
 
-import GroupList from "./components/GroupList";
+import GroupList from "./components/GroupList/GroupList";
 import SendGroup from "./components/SendGroup"
 import Me from './components/me/index'
 import { queryUsers } from '../../api/api'
