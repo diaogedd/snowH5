@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Input, Button, Form, TextArea, CalendarPicker } from 'antd-mobile';
 import styles from './CarAndRoom.module.less';
 import dayjs from 'dayjs';
-import { createOrUpdateRoom } from '../../../../api/api'
+import { createOrUpdateRoom } from '../../../../api/api';
 
 const RoomForm: React.FC = () => {
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
@@ -12,18 +12,14 @@ const RoomForm: React.FC = () => {
     <Form
       layout="horizontal"
       className={styles['car-room-form']}
-      onFinish={values => {
+      onFinish={(values) => {
         const formatted = {
           ...values,
           dateRange: dateRange
             ? `${dayjs(dateRange[0]).format('YYYY-MM-DD')} ~ ${dayjs(dateRange[1]).format('YYYY-MM-DD')}`
             : undefined,
-          checkInTime: dateRange
-            ? `${dayjs(dateRange[0]).format('YYYY-MM-DD')}`
-            : undefined,
-          checkOutTime: dateRange
-            ? `${dayjs(dateRange[1]).format('YYYY-MM-DD')}`
-            : undefined,
+          checkInTime: dateRange ? `${dayjs(dateRange[0]).format('YYYY-MM-DD')}` : undefined,
+          checkOutTime: dateRange ? `${dayjs(dateRange[1]).format('YYYY-MM-DD')}` : undefined,
         };
         createOrUpdateRoom(formatted);
         console.log('发布表单提交:', formatted);
@@ -46,7 +42,13 @@ const RoomForm: React.FC = () => {
         <div style={{ flex: 1 }}>
           <div
             className={styles['car-room-input']}
-            style={{ cursor: 'pointer', background: '#f7f8fa', minHeight: 32, display: 'flex', alignItems: 'center' }}
+            style={{
+              cursor: 'pointer',
+              background: '#f7f8fa',
+              minHeight: 32,
+              display: 'flex',
+              alignItems: 'center',
+            }}
             onClick={() => setCalendarVisible(true)}
           >
             {dateRange
@@ -57,7 +59,7 @@ const RoomForm: React.FC = () => {
             visible={calendarVisible}
             selectionMode="range"
             onClose={() => setCalendarVisible(false)}
-            onConfirm={val => {
+            onConfirm={(val) => {
               setDateRange(val as [Date, Date]);
               setCalendarVisible(false);
             }}
@@ -71,14 +73,22 @@ const RoomForm: React.FC = () => {
         <span className={styles['car-room-label']}>可拼</span>
         <Form.Item name="targetNumber" initialValue={1}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Input type="number" min={1} max={100} style={{ width: 60 }} className={styles['car-room-input']} />
+            <Input
+              type="number"
+              min={1}
+              max={100}
+              style={{ width: 60 }}
+              className={styles['car-room-input']}
+            />
             <span style={{ marginLeft: 4, color: '#888' }}>人</span>
           </div>
         </Form.Item>
       </div>
       {/* 备注 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'flex-start', marginTop: 8 }}>
-        <span className={styles['car-room-label']} style={{ marginTop: 8 }}>备注：</span>
+        <span className={styles['car-room-label']} style={{ marginTop: 8 }}>
+          备注：
+        </span>
         <Form.Item name="remarks" style={{ flex: 1 }}>
           <TextArea
             placeholder=""
@@ -90,7 +100,9 @@ const RoomForm: React.FC = () => {
       </div>
       {/* 按钮 */}
       <div className={styles['car-room-btns']}>
-        <Button color='primary' type="submit">立即发布</Button>
+        <Button color="primary" type="submit">
+          立即发布
+        </Button>
         {/* <Button color='default' type="button">暂存</Button> */}
       </div>
     </Form>

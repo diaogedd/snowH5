@@ -89,7 +89,7 @@ export const MeGroup: React.FC = () => {
 
   const getFilteredData = (tab: string) => {
     if (tab === '全部') return mockData;
-    return mockData.filter(item => {
+    return mockData.filter((item) => {
       switch (tab) {
         case '待发布':
           return item.status === '待发布';
@@ -109,11 +109,7 @@ export const MeGroup: React.FC = () => {
         我的发团
       </NavBar>
 
-      <Tabs
-        activeKey={activeTab}
-        onChange={setActiveTab}
-        className={styles.tabs}
-      >
+      <Tabs activeKey={activeTab} onChange={setActiveTab} className={styles.tabs}>
         <Tabs.Tab title="全部" key="全部" />
         <Tabs.Tab title="待发布" key="待发布" />
         <Tabs.Tab title="待成团" key="待成团" />
@@ -121,7 +117,7 @@ export const MeGroup: React.FC = () => {
       </Tabs>
 
       <div className={styles.groupList}>
-        {getFilteredData(activeTab).map(item => (
+        {getFilteredData(activeTab).map((item) => (
           <MyGroupItem key={item.id} item={item} />
         ))}
       </div>

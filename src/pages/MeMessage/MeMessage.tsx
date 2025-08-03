@@ -13,19 +13,21 @@ const MeMessage: React.FC = () => {
     birthday: '',
     school: '',
   });
-  const [fileList, setFileList] = useState<ImageUploadItem[]>([{
-    url: 'https://randomuser.me/api/portraits/women/44.jpg',
-  }]);
+  const [fileList, setFileList] = useState<ImageUploadItem[]>([
+    {
+      url: 'https://randomuser.me/api/portraits/women/44.jpg',
+    },
+  ]);
 
-  const handleChange = (name: string, value: string) => {
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
+  // const handleChange = (name: string, value: string) => {
+  //   setForm((prev) => ({ ...prev, [name]: value }));
+  // };
 
-  const mockUpload = async (file: File) => {
-    return {
-      url: URL.createObjectURL(file),
-    };
-  };
+  // const mockUpload = async (file: File) => {
+  //   return {
+  //     url: URL.createObjectURL(file),
+  //   };
+  // };
 
   const handleFinish = () => {
     console.log('表单提交数据:', form, '头像:', fileList[0]?.url);
@@ -39,12 +41,12 @@ const MeMessage: React.FC = () => {
   return (
     <div className={styles.meMsgPage}>
       <div className={styles.headerBar}>
-        <Button fill='none' onClick={handleBack} className={styles.backBtn}>
+        <Button fill="none" onClick={handleBack} className={styles.backBtn}>
           <LeftOutline fontSize={24} />
         </Button>
         <span className={styles.pageTitle}>个人信息</span>
       </div>
-      <Form className={styles.formBox} onFinish={handleFinish} mode='default'>
+      <Form className={styles.formBox} onFinish={handleFinish} mode="default">
         <Form.Item label="头像">
           <ImageUploader
             value={fileList}
@@ -71,10 +73,12 @@ const MeMessage: React.FC = () => {
         <Form.Item label="学校">
           <Input name="school" clearable className={styles.inputStyle} />
         </Form.Item>
-        <Button className={styles.saveBtn} color='primary' type="submit">保存</Button>
+        <Button className={styles.saveBtn} color="primary" type="submit">
+          保存
+        </Button>
       </Form>
     </div>
   );
 };
 
-export default MeMessage; 
+export default MeMessage;

@@ -51,26 +51,17 @@ export const MyGroupItem: React.FC<MyGroupItemProps> = ({ item }) => {
 
       <div className={styles.cardActions}>
         {item.canDelete && (
-          <button
-            className={styles.actionBtn}
-            onClick={() => handleAction('删除')}
-          >
+          <button className={styles.actionBtn} onClick={() => handleAction('删除')}>
             删除
           </button>
         )}
         {item.canModify && (
-          <button
-            className={styles.actionBtn}
-            onClick={() => handleAction('修改')}
-          >
+          <button className={styles.actionBtn} onClick={() => handleAction('修改')}>
             修改
           </button>
         )}
         {item.canCancel && (
-          <button
-            className={styles.actionBtn}
-            onClick={() => handleAction('取消')}
-          >
+          <button className={styles.actionBtn} onClick={() => handleAction('取消')}>
             取消
           </button>
         )}
@@ -83,14 +74,11 @@ export const MyGroupItem: React.FC<MyGroupItemProps> = ({ item }) => {
           </button>
         )}
         {item.canShare && (
-          <button
-            className={styles.actionBtn}
-            onClick={() => handleAction('分享')}
-          >
+          <button className={styles.actionBtn} onClick={() => handleAction('分享')}>
             分享
           </button>
         )}
       </div>
     </div>
   );
-}; 
+};

@@ -7,7 +7,7 @@ import styles from './index.module.less';
 
 const SendGroup: React.FC = () => {
   return (
-    <Tabs defaultActiveKey="car" className={styles.tabs} >
+    <Tabs defaultActiveKey="car" className={styles.tabs}>
       <Tabs.Tab title="车房" key="car">
         <CarAndRoom />
       </Tabs.Tab>

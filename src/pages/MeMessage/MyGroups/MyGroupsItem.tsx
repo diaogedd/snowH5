@@ -71,10 +71,7 @@ export const MyGroupsItem: React.FC<MyGroupsItemProps> = ({ item }) => {
 
       <div className={styles.cardActions}>
         {item.canCancel && (
-          <button
-            className={styles.actionBtn}
-            onClick={() => handleAction('取消')}
-          >
+          <button className={styles.actionBtn} onClick={() => handleAction('取消')}>
             取消
           </button>
         )}
@@ -95,14 +92,11 @@ export const MyGroupsItem: React.FC<MyGroupsItemProps> = ({ item }) => {
           </button>
         )}
         {item.canView && (
-          <button
-            className={styles.actionBtn}
-            onClick={() => handleAction('查看')}
-          >
+          <button className={styles.actionBtn} onClick={() => handleAction('查看')}>
             查看详情
           </button>
         )}
       </div>
     </div>
   );
-}; 
+};

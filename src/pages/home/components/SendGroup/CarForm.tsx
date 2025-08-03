@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Input, Button, Switch, DatePicker, Form, Space, TextArea } from 'antd-mobile';
 import styles from './CarAndRoom.module.less';
 import dayjs from 'dayjs';
-import { createOrUpdateCar } from '../../../../api/api'
+import { createOrUpdateCar } from '../../../../api/api';
 
 const CarForm: React.FC = () => {
   const [showReturnTime, setShowReturnTime] = useState(false);
@@ -10,11 +10,15 @@ const CarForm: React.FC = () => {
     <Form
       layout="horizontal"
       className={styles['car-room-form']}
-      onFinish={values => {
+      onFinish={(values) => {
         const formatted = {
           ...values,
-          departureTime: values.departureTime ? dayjs(values.departureTime).format('YYYY/MM/DD HH:mm') : undefined,
-          returnTime: values.returnTime ? dayjs(values.returnTime).format('YYYY/MM/DD HH:mm') : undefined,
+          departureTime: values.departureTime
+            ? dayjs(values.departureTime).format('YYYY/MM/DD HH:mm')
+            : undefined,
+          returnTime: values.returnTime
+            ? dayjs(values.returnTime).format('YYYY/MM/DD HH:mm')
+            : undefined,
           title: dayjs().format('YYYYMMDDHHmmss拼车'),
         };
         createOrUpdateCar(formatted);
@@ -33,15 +37,13 @@ const CarForm: React.FC = () => {
         <Form.Item name="startLocation">
           <Input placeholder="" className={styles['car-room-input']} />
         </Form.Item>
-        <button className={styles['car-room-exchange-btn']} type="button">⇄</button>
+        <button className={styles['car-room-exchange-btn']} type="button">
+          ⇄
+        </button>
         <Form.Item name="endLocation">
           <Input placeholder="" className={styles['car-room-input']} />
         </Form.Item>
-        <Form.Item
-          name='needBack'
-          valuePropName="checked"
-          childElementPosition='right'
-        >
+        <Form.Item name="needBack" valuePropName="checked" childElementPosition="right">
           <Switch style={{ marginLeft: 8 }} />
         </Form.Item>
         <span className={styles['car-room-switch-label']}>往返</span>
@@ -49,9 +51,14 @@ const CarForm: React.FC = () => {
       {/* 时间 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'center' }}>
         <span className={styles['car-room-label']}>出发时间：</span>
-        <Form.Item name="departureTime" style={{ flex: 1 }} trigger="onConfirm" onClick={(_, ref) => ref.current?.open()}>
+        <Form.Item
+          name="departureTime"
+          style={{ flex: 1 }}
+          trigger="onConfirm"
+          onClick={(_, ref) => ref.current?.open()}
+        >
           <DatePicker precision="minute" min={new Date()}>
-            {value => value ? dayjs(value).format('YYYY/MM/DD  HH:mm') : '选择返回时间'}
+            {(value) => (value ? dayjs(value).format('YYYY/MM/DD  HH:mm') : '选择返回时间')}
           </DatePicker>
         </Form.Item>
       </div>
@@ -66,7 +73,7 @@ const CarForm: React.FC = () => {
             onClick={(_, ref) => ref.current?.open()}
           >
             <DatePicker precision="minute" min={new Date()}>
-              {value => value ? dayjs(value).format('YYYY/MM/DD HH:mm') : '选择返回时间'}
+              {(value) => (value ? dayjs(value).format('YYYY/MM/DD HH:mm') : '选择返回时间')}
             </DatePicker>
           </Form.Item>
         </div>
@@ -76,17 +83,22 @@ const CarForm: React.FC = () => {
         <span className={styles['car-room-label']}>可拼</span>
         <Form.Item name="targetNumber" initialValue={1}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Input type="number" min={1} max={100} style={{ width: 60 }} className={styles['car-room-input']}
+            <Input
+              type="number"
+              min={1}
+              max={100}
+              style={{ width: 60 }}
+              className={styles['car-room-input']}
             />
             <span style={{ marginLeft: 4, color: '#888' }}>人</span>
           </div>
-
         </Form.Item>
-
       </div>
       {/* 备注 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'flex-start', marginTop: 8 }}>
-        <span className={styles['car-room-label']} style={{ marginTop: 8 }}>备注：</span>
+        <span className={styles['car-room-label']} style={{ marginTop: 8 }}>
+          备注：
+        </span>
         <Form.Item name="remarks" style={{ flex: 1 }}>
           <TextArea
             placeholder=""
@@ -98,7 +110,9 @@ const CarForm: React.FC = () => {
       </div>
       {/* 按钮 */}
       <div className={styles['car-room-btns']}>
-        <Button color='primary' type="submit">立即发布</Button>
+        <Button color="primary" type="submit">
+          立即发布
+        </Button>
         {/* <Button color='default' type="button">暂存</Button> */}
       </div>
     </Form>

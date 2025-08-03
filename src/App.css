@@ -57,10 +57,10 @@ th {
 
 q:after,
 q:before {
-  content: "";
+  content: '';
 }
 
-input[type="password"] {
+input[type='password'] {
   ime-mode: disabled;
 }
 
@@ -94,7 +94,7 @@ textarea {
   line-height: 1;
   color: #333;
   font-family:
-    "AlibabaSans",
+    'AlibabaSans',
     PingFang SC,
     -apple-system,
     BlinkMacSystemFont,
@@ -126,30 +126,30 @@ h6 {
   visibility: hidden;
   display: block;
   font-size: 0;
-  content: " ";
+  content: ' ';
   clear: both;
   height: 0;
 }
 
 @font-face {
-  font-family: "AlibabaSans";
+  font-family: 'AlibabaSans';
   src: url(https://gw.alipayobjects.com/as/g/antui/antui-static/1.0.5/fonts/AlibabaSans102Ver2-Rg.woff)
-    format("woff");
+    format('woff');
   font-display: swap;
 }
 
 @font-face {
-  font-family: "AlibabaSans";
+  font-family: 'AlibabaSans';
   src: url(https://gw.alipayobjects.com/as/g/antui/antui-static/1.0.5/fonts/AlibabaSans102Ver2-Md.woff)
-    format("woff");
+    format('woff');
   font-weight: 500;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "AlibabaSansMd";
+  font-family: 'AlibabaSansMd';
   src: url(https://gw.alipayobjects.com/as/g/antui/antui-static/1.0.5/fonts/AlibabaSans102Ver2-Md.woff)
-    format("woff");
+    format('woff');
   font-weight: 500;
   font-display: swap;
 }

@@ -100,7 +100,7 @@ export const MyGroups: React.FC = () => {
 
   const getFilteredData = (tab: string) => {
     if (tab === '全部') return mockData;
-    return mockData.filter(item => {
+    return mockData.filter((item) => {
       switch (tab) {
         case '进行中':
           return item.status === '进行中';
@@ -120,11 +120,7 @@ export const MyGroups: React.FC = () => {
         我的拼团
       </NavBar>
 
-      <Tabs
-        activeKey={activeTab}
-        onChange={setActiveTab}
-        className={styles.tabs}
-      >
+      <Tabs activeKey={activeTab} onChange={setActiveTab} className={styles.tabs}>
         <Tabs.Tab title="全部" key="全部" />
         <Tabs.Tab title="进行中" key="进行中" />
         <Tabs.Tab title="待确认" key="待确认" />
@@ -132,10 +128,10 @@ export const MyGroups: React.FC = () => {
       </Tabs>
 
       <div className={styles.groupList}>
-        {getFilteredData(activeTab).map(item => (
+        {getFilteredData(activeTab).map((item) => (
           <MyGroupsItem key={item.id} item={item} />
         ))}
       </div>
     </div>
   );
-}; 
+};
