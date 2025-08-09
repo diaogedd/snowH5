@@ -2,19 +2,8 @@ import type React from 'react';
 import styles from '../../index.module.less';
 import { Badge } from 'antd-mobile';
 
-interface GroupItemData {
-  id: string;
-  title: string;
-  location: string;
-  time: string;
-  carType?: string;
-  people?: number;
-  remark?: string;
-  left: number;
-}
-
 export const GroupItem: React.FC<{
-  item: GroupItemData;
+  item: any;
 }> = ({ item }) => {
   return (
     <>

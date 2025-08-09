@@ -12,14 +12,30 @@ const CarForm: React.FC = () => {
       className={styles['car-room-form']}
       onFinish={(values) => {
         const formatted = {
-          ...values,
-          departureTime: values.departureTime
-            ? dayjs(values.departureTime).format('YYYY/MM/DD HH:mm')
-            : undefined,
-          returnTime: values.returnTime
-            ? dayjs(values.returnTime).format('YYYY/MM/DD HH:mm')
-            : undefined,
-          title: dayjs().format('YYYYMMDDHHmmss拼车'),
+          // ...values,
+          // departureTime: values.departureTime
+          //   ? dayjs(values.departureTime).format('YYYY/MM/DD HH:mm')
+          //   : undefined,
+          // returnTime: values.returnTime
+          //   ? dayjs(values.returnTime).format('YYYY/MM/DD HH:mm')
+          //   : undefined,
+          // title: dayjs().format('YYYYMMDDHHmmss拼车'),
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "title": "string",
+          "description": "string",
+          "targetNumber": 20,
+          "remarks": "string",
+          "isSave": true,
+          "skiResortId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "groupType": "Car",
+          "startLocation": "string",
+          "endLocation": "string",
+          "needBack": true,
+          "departureTime": "2025-08-03T14:09:55.317Z",
+          "returnTime": "2025-08-03T14:09:55.317Z",
+          "vehicleType": "string",
+          "carPrice": 0,
+          "carDescription": "string"
         };
         createOrUpdateCar(formatted);
         console.log('发布表单提交:', formatted);

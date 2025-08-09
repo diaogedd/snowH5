@@ -19,15 +19,15 @@ const MeMessage: React.FC = () => {
     },
   ]);
 
-  // const handleChange = (name: string, value: string) => {
-  //   setForm((prev) => ({ ...prev, [name]: value }));
-  // };
+  const handleChange = (name: string, value: string) => {
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-  // const mockUpload = async (file: File) => {
-  //   return {
-  //     url: URL.createObjectURL(file),
-  //   };
-  // };
+  const mockUpload = async (file: File) => {
+    return {
+      url: URL.createObjectURL(file),
+    };
+  };
 
   const handleFinish = () => {
     console.log('表单提交数据:', form, '头像:', fileList[0]?.url);

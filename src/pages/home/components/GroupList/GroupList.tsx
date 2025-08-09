@@ -1,81 +1,122 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import styles from '../../index.module.less';
-import { DatePicker, Button, Checkbox, Switch, Form, Input, Space, Radio } from 'antd-mobile';
+import {
+  DatePicker,
+  Button,
+  Badge,
+  Checkbox,
+  Switch,
+  Form,
+  Input,
+  Space,
+  Radio,
+  Empty,
+  SpinLoading,
+} from 'antd-mobile';
 import dayjs from 'dayjs';
 import { GroupItem } from './GroupItem';
+import { useRequest } from 'ahooks';
+import { queryGroupList } from '../../../../api/api';
 
-interface GroupItem {
-  id: number;
-  type: string;
+// 本地数据类型定义，用于适配 GroupItem 组件
+interface LocalGroupItem {
+  id: string;
   title: string;
   location: string;
   time: string;
-  people?: number;
+  carType?: string;
+  people: number;
   left: number;
   remark?: string;
-  carType?: string;
+  type: 'car' | 'room' | 'car-room';
 }
 
-interface GroupListProps {
-  groupList: GroupItem[];
-}
-const groupList = [
-  {
-    id: 1,
-    type: 'car',
-    title: '小花发起的拼车',
-    location: '111 → 222',
-    time: '2025.7.11 8:00',
-    people: 4,
-    left: 1,
-    remark: '喜欢胜的',
-  },
-  {
-    id: 1,
-    type: 'car',
-    title: '小花发起的拼车',
-    location: '111 → 222',
-    time: '2025.7.11 8:00',
-    people: 4,
-    left: 1,
-    remark: '喜欢胜的',
-  },
-  {
-    id: 2,
-    type: 'room',
-    title: '小6发起的拼房',
-    location: '北京 我爱我家民宿soft（墨尔本店）',
-    time: '2025.7.11~7.12 1晚/1间',
-    people: 2,
-    left: 1,
-    remark: '喜欢邂逅的',
-  },
-  {
-    id: 3,
-    type: 'car-room',
-    title: '小绿发起的拼车房',
-    location: '111 → 222',
-    time: '2025.7.11 8:00',
-    carType: '坦克300',
-    left: 1,
-    remark: '',
-  },
-];
 const GroupList = () => {
+  // 使用 useRequest 调用 queryGroupList
+  const { data, loading, error, run } = useRequest(
+    async () => {
+      const result = await queryGroupList();
+      return result;
+    },
+    {
+      manual: false, // 自动执行
+      onSuccess: (result) => {
+        console.log('团购列表加载成功:', result);
+      },
+      onError: (error) => {
+        console.error('团购列表加载失败:', error);
+      },
+    }
+  );
+
+  // 将 API 数据转换为本地组件需要的格式
+  const transformGroupData = (apiData: any): LocalGroupItem[] => {
+    if (!apiData?.data) return [];
+    
+    return apiData.data.map((item: any) => ({
+      id: item.id,
+      title: item.title || '未命名团购',
+      location: `${item.creator?.name || '未知'} 发起的${getGroupTypeText(item.groupType)}`,
+      time: formatTime(item.creationTime),
+      carType: item.groupType === 'Car' ? '车型待定' : undefined,
+      people: item.targetNumber || 0,
+      left: Math.max(0, (item.targetNumber || 0) - (item.currentNumber || 0)),
+      remark: item.description || '',
+      type: getGroupType(item.groupType),
+    }));
+  };
+
+  // 获取团购类型文本
+  const getGroupTypeText = (groupType: string) => {
+    switch (groupType) {
+      case 'Car': return '拼车';
+      case 'Room': return '拼房';
+      case 'CarRoom': return '拼车房';
+      default: return '拼团';
+    }
+  };
+
+  // 获取团购类型
+  const getGroupType = (groupType: string): 'car' | 'room' | 'car-room' => {
+    switch (groupType) {
+      case 'Car': return 'car';
+      case 'Room': return 'room';
+      case 'CarRoom': return 'car-room';
+      default: return 'car';
+    }
+  };
+
+  // 格式化时间
+  const formatTime = (timeString: string) => {
+    if (!timeString) return '时间待定';
+    try {
+      return dayjs(timeString).format('YYYY.M.D HH:mm');
+    } catch {
+      return '时间待定';
+    }
+  };
+
+  // 处理表单提交
+  const handleFormSubmit = (values: any) => {
+    const formatted = {
+      ...values,
+      date: values.date ? dayjs(values.date).format('YYYY-MM-DD') : undefined,
+    };
+    console.log('筛选表单提交:', formatted);
+    // TODO: 这里可以添加筛选逻辑，重新调用 API
+    // run(formatted);
+  };
+
+  // 转换后的数据
+  const groupListData = transformGroupData(data);
+
   return (
     <>
       <Form
         className={styles.form}
         layout="horizontal"
-        onFinish={(values) => {
-          // 格式化 date 字段
-          const formatted = {
-            ...values,
-            date: values.date ? dayjs(values.date).format('YYYY-MM-DD') : undefined,
-          };
-          console.log('筛选表单提交:', formatted);
-        }}
+        onFinish={handleFormSubmit}
         footer={null}
       >
         {/* 出发地-目的地-往返 */}
@@ -135,10 +176,42 @@ const GroupList = () => {
           </Button>
         </Space>
       </Form>
+
+      {/* 数据展示区域 */}
       <div className={styles['group-list']}>
-        {groupList.map((item) => (
-          <GroupItem key={item.id} item={item} />
-        ))}
+        {loading && (
+          <div style={{ textAlign: 'center', padding: '40px 0' }}>
+            <SpinLoading />
+            <div style={{ marginTop: '10px', color: '#999' }}>加载中...</div>
+          </div>
+        )}
+
+        {error && (
+          <div style={{ textAlign: 'center', padding: '40px 0' }}>
+            <div style={{ color: '#ff4d4f' }}>加载失败，请重试</div>
+            <Button 
+              size="small" 
+              color="primary" 
+              style={{ marginTop: '10px' }}
+              onClick={() => run()}
+            >
+              重新加载
+            </Button>
+          </div>
+        )}
+
+        {!loading && !error && groupListData.length === 0 && (
+          <Empty
+            description="暂无团购信息"
+            style={{ padding: '40px 0' }}
+          />
+        )}
+
+        {!loading && !error && groupListData.length > 0 && (
+          groupListData.map((item) => (
+            <GroupItem key={item.id} item={item} />
+          ))
+        )}
       </div>
     </>
   );

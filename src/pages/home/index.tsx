@@ -11,10 +11,6 @@ import { queryUsers, queryGroupList } from '../../api/api';
 const IndexPage: React.FC = () => {
   const [activeKey, setActiveKey] = useState('1');
 
-  useEffect(() => {
-    queryUsers();
-    queryGroupList();
-  }, []);
 
   return (
     <div className={styles['group-page']}>
