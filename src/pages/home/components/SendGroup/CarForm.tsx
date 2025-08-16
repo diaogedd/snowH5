@@ -1,44 +1,41 @@
-import React, { useState } from 'react';
-import { Input, Button, Switch, DatePicker, Form, Space, TextArea } from 'antd-mobile';
+import React, { useEffect, useState } from 'react';
+import { Input, Button, Switch, DatePicker, Form, TextArea } from 'antd-mobile';
 import styles from './CarAndRoom.module.less';
 import dayjs from 'dayjs';
 import { createOrUpdateCar } from '../../../../api/api';
 
-const CarForm: React.FC = () => {
+const CarForm: React.FC<{ initData?: any; actionType: 'create' | 'update' }> = ({
+  initData,
+  actionType,
+}) => {
   const [showReturnTime, setShowReturnTime] = useState(false);
+  const [form] = Form.useForm();
+  useEffect(() => {
+    console.log(initData);
+
+    if (initData) {
+      // 确保日期字段是 Date 对象
+      const formData = {
+        ...initData,
+        departureTime: initData.departureTime ? new Date(initData.departureTime) : undefined,
+        returnTime: initData.returnTime ? new Date(initData.returnTime) : undefined,
+      };
+
+      form.setFieldsValue(formData);
+      setShowReturnTime(initData.needBack);
+    }
+  }, [initData, form]);
   return (
     <Form
       layout="horizontal"
       className={styles['car-room-form']}
       onFinish={(values) => {
-        const formatted = {
-          // ...values,
-          // departureTime: values.departureTime
-          //   ? dayjs(values.departureTime).format('YYYY/MM/DD HH:mm')
-          //   : undefined,
-          // returnTime: values.returnTime
-          //   ? dayjs(values.returnTime).format('YYYY/MM/DD HH:mm')
-          //   : undefined,
-          // title: dayjs().format('YYYYMMDDHHmmss拼车'),
-          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "title": "string",
-          "description": "string",
-          "targetNumber": 20,
-          "remarks": "string",
-          "isSave": true,
-          "skiResortId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "groupType": "Car",
-          "startLocation": "string",
-          "endLocation": "string",
-          "needBack": true,
-          "departureTime": "2025-08-03T14:09:55.317Z",
-          "returnTime": "2025-08-03T14:09:55.317Z",
-          "vehicleType": "string",
-          "carPrice": 0,
-          "carDescription": "string"
-        };
-        createOrUpdateCar(formatted);
-        console.log('发布表单提交:', formatted);
+        if (actionType === 'update') {
+          createOrUpdateCar({ title: '1', ...values, id: initData?.id, isSave: true });
+        } else {
+          createOrUpdateCar({ title: '1', ...values });
+        }
+        console.log('发布表单提交:', values);
       }}
       onValuesChange={(changedValues) => {
         if ('needBack' in changedValues) {
@@ -46,6 +43,7 @@ const CarForm: React.FC = () => {
         }
       }}
       footer={null}
+      form={form}
     >
       {/* 地点 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'center' }}>
@@ -97,18 +95,16 @@ const CarForm: React.FC = () => {
       {/* 可拼人数 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'center', marginTop: 8 }}>
         <span className={styles['car-room-label']}>可拼</span>
-        <Form.Item name="targetNumber" initialValue={1}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Input
-              type="number"
-              min={1}
-              max={100}
-              style={{ width: 60 }}
-              className={styles['car-room-input']}
-            />
-            <span style={{ marginLeft: 4, color: '#888' }}>人</span>
-          </div>
+        <Form.Item name="targetNumber">
+          <Input
+            type="number"
+            min={1}
+            max={100}
+            style={{ width: 60 }}
+            className={styles['car-room-input']}
+          />
         </Form.Item>
+        <span style={{ marginLeft: 4, color: '#888' }}>人</span>
       </div>
       {/* 备注 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'flex-start', marginTop: 8 }}>
@@ -127,9 +123,19 @@ const CarForm: React.FC = () => {
       {/* 按钮 */}
       <div className={styles['car-room-btns']}>
         <Button color="primary" type="submit">
-          立即发布
+          {actionType === 'update' ? '更新' : '立即发布'}
         </Button>
-        {/* <Button color='default' type="button">暂存</Button> */}
+        {actionType !== 'update' && (
+          <Button
+            color="default"
+            type="button"
+            onClick={() => {
+              createOrUpdateCar({ title: '1', ...form.getFieldsValue(), isSave: true });
+            }}
+          >
+            暂存
+          </Button>
+        )}
       </div>
     </Form>
   );

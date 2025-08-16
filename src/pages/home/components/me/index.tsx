@@ -5,6 +5,7 @@ import { Button } from 'antd-mobile';
 
 const Me: React.FC = () => {
   const navigate = useNavigate();
+
   return (
     <div className={styles.mePage}>
       <div className={styles.profileCard}>
@@ -36,7 +37,7 @@ const Me: React.FC = () => {
         <Button color="primary" className={styles.meBtn} onClick={() => navigate('/me-group')}>
           我的发团
         </Button>
-        <Button color="primary" className={styles.meBtn} onClick={() => navigate('/my-groups')}>
+        <Button color="primary" className={styles.meBtn} onClick={() => navigate('/me-join')}>
           我的拼团
         </Button>
       </div>

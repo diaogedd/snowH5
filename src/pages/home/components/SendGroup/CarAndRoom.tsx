@@ -1,13 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input, Button, Switch, DatePicker, Form, Space, TextArea } from 'antd-mobile';
 import styles from './CarAndRoom.module.less';
 import dayjs from 'dayjs';
 import { createOrUpdateCarRoom } from '../../../../api/api';
 
-const CarAndRoom: React.FC = () => {
+const CarAndRoom: React.FC<{ initData?: any; actionType: 'create' | 'update' }> = ({
+  initData,
+  actionType,
+}) => {
   const [showReturnTime, setShowReturnTime] = useState(false);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (initData) {
+      // 确保日期字段是 Date 对象
+      const formData = {
+        ...initData,
+        departureTime: initData.departureTime ? new Date(initData.departureTime) : undefined,
+        returnTime: initData.returnTime ? new Date(initData.returnTime) : undefined,
+      };
+
+      form.setFieldsValue(formData);
+      setShowReturnTime(initData.needBack || false);
+    }
+  }, [initData, form]);
+
   return (
     <Form
+      form={form}
       layout="horizontal"
       className={styles['car-room-form']}
       onFinish={(values) => {
@@ -19,9 +39,13 @@ const CarAndRoom: React.FC = () => {
           returnTime: values.returnTime
             ? dayjs(values.returnTime).format('YYYY/MM/DD HH:mm')
             : undefined,
-          title: dayjs().format('YYYYMMDDHHmmss拼车房'),
+          title: initData?.title || dayjs().format('YYYYMMDDHHmmss拼车房'),
         };
-        createOrUpdateCarRoom(formatted);
+        if (actionType === 'update') {
+          createOrUpdateCarRoom({ ...formatted, id: initData?.id, title: '1', isSave: true });
+        } else {
+          createOrUpdateCarRoom(formatted);
+        }
         console.log('发布表单提交:', formatted);
       }}
       onValuesChange={(changedValues) => {
@@ -84,17 +108,16 @@ const CarAndRoom: React.FC = () => {
           <span className={styles['car-room-label']}>出行：</span>
         </div>
         <div className={styles['car-room-row']} style={{ marginTop: 0 }}>
-          <Form.Item name="vehicleType" style={{ flex: 1 }}>
+          <Form.Item name="vehicleType">
             <Input placeholder="输入车型" className={styles['car-room-input']} />
           </Form.Item>
-          <Form.Item name="carPrice" style={{ flex: 1, margin: '0 8px', minWidth: 50 }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', width: 150 }}>
+            <Form.Item name="carPrice" extra={<span style={{ color: '#888' }}>￥</span>}>
               <Input placeholder="请输入价格" className={styles['car-room-input']} />
-              <span style={{ marginLeft: 4, color: '#888' }}>￥</span>
-            </div>
-          </Form.Item>
-          <Form.Item name="carDescription" style={{ flex: 1, minWidth: 60 }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            </Form.Item>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', width: 150 }}>
+            <Form.Item name="carDescription" extra={<span style={{ color: '#888' }}>座</span>}>
               <Input
                 placeholder="几座车"
                 type="number"
@@ -102,9 +125,8 @@ const CarAndRoom: React.FC = () => {
                 max={100}
                 className={styles['car-room-input']}
               />
-              <span style={{ marginLeft: 4, color: '#888' }}>座</span>
-            </div>
-          </Form.Item>
+            </Form.Item>
+          </div>
         </div>
       </div>
       {/* 住所 */}
@@ -113,17 +135,16 @@ const CarAndRoom: React.FC = () => {
           <span className={styles['car-room-label']}>住所：</span>
         </div>
         <div className={styles['car-room-row']} style={{ marginTop: 0 }}>
-          <Form.Item name="roomName" style={{ flex: 1 }}>
+          <Form.Item name="roomName">
             <Input placeholder="店名" className={styles['car-room-input']} />
           </Form.Item>
-          <Form.Item name="roomPrice" style={{ flex: 1, margin: '0 8px', minWidth: 50 }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Input placeholder="价格" className={styles['car-room-input']} />
-              <span style={{ marginLeft: 4, color: '#888' }}>￥</span>
-            </div>
-          </Form.Item>
-          <Form.Item name="roomDescription" style={{ flex: 1, width: 30 }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', width: 150 }}>
+            <Form.Item name="roomPrice" extra={<span style={{ color: '#888' }}>￥</span>}>
+              <Input placeholder="请输入价格" className={styles['car-room-input']} />
+            </Form.Item>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', width: 150 }}>
+            <Form.Item name="roomDescription" extra={<span style={{ color: '#888' }}>座</span>}>
               <Input
                 placeholder="几人房"
                 type="number"
@@ -131,25 +152,16 @@ const CarAndRoom: React.FC = () => {
                 max={100}
                 className={styles['car-room-input']}
               />
-              <span style={{ marginLeft: 4, color: '#888' }}>人</span>
-            </div>
-          </Form.Item>
+            </Form.Item>
+          </div>
         </div>
       </div>
+
       {/* 可拼人数 */}
       <div className={styles['car-room-row']} style={{ alignItems: 'center', marginTop: 8 }}>
         <span className={styles['car-room-label']}>可拼</span>
-        <Form.Item name="targetNumber" initialValue={1}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Input
-              type="number"
-              min={1}
-              max={100}
-              style={{ width: 60 }}
-              className={styles['car-room-input']}
-            />
-            <span style={{ marginLeft: 4, color: '#888' }}>人</span>
-          </div>
+        <Form.Item name="targetNumber" extra={<span style={{ color: '#888' }}>人</span>}>
+          <Input type="number" min={1} max={100} className={styles['car-room-input']} />
         </Form.Item>
       </div>
       {/* 备注 */}
@@ -169,9 +181,31 @@ const CarAndRoom: React.FC = () => {
       {/* 按钮 */}
       <div className={styles['car-room-btns']}>
         <Button color="primary" type="submit">
-          立即发布
+          {actionType === 'update' ? '更新' : '立即发布'}
         </Button>
-        {/* <Button color='default' type="button">暂存</Button> */}
+        {actionType !== 'update' && (
+          <Button
+            color="default"
+            type="button"
+            onClick={() => {
+              const values = form.getFieldsValue();
+              const formatted = {
+                ...values,
+                departureTime: values.departureTime
+                  ? dayjs(values.departureTime).format('YYYY/MM/DD HH:mm')
+                  : undefined,
+                returnTime: values.returnTime
+                  ? dayjs(values.returnTime).format('YYYY/MM/DD HH:mm')
+                  : undefined,
+                title: dayjs().format('YYYYMMDDHHmmss拼车房'),
+                isSave: true,
+              };
+              createOrUpdateCarRoom(formatted);
+            }}
+          >
+            暂存
+          </Button>
+        )}
       </div>
     </Form>
   );

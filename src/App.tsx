@@ -6,8 +6,10 @@ import AuthGuard from './components/AuthGuard';
 import HomePage from './pages/home/index';
 import IndexLoginPage from './pages/index_login';
 import MeMessage from './pages/MeMessage/MeMessage';
-import { MeGroup } from './pages/MeMessage/MeGroup/MeGroup';
-import { MyGroups } from './pages/MeMessage/MyGroups/MyGroups';
+import { MeGroupPage } from './pages/MeMessage/MeGroup';
+import { MeJoinPage } from './pages/MeMessage/MeJoin';
+
+import { UpdateGroup } from './pages/updateGroup';
 
 const App: React.FC = () => {
   return (
@@ -36,15 +38,24 @@ const App: React.FC = () => {
             path="/me-group"
             element={
               <AuthGuard>
-                <MeGroup />
+                <MeGroupPage />
               </AuthGuard>
             }
           />
           <Route
-            path="/my-groups"
+            path="/me-join"
             element={
               <AuthGuard>
-                <MyGroups />
+                <MeJoinPage />
+              </AuthGuard>
+            }
+          />
+
+          <Route
+            path="/update-group/:type/:id"
+            element={
+              <AuthGuard>
+                <UpdateGroup />
               </AuthGuard>
             }
           />

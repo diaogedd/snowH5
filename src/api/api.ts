@@ -1,17 +1,66 @@
 import { getAccessToken } from '../auth/auth-utils';
+import axios from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { GROUP_STATUS } from '../const';
+import { Toast } from 'antd-mobile';
 
-export async function request<T = any>(url: string, options: RequestInit = {}): Promise<T> {
+/**
+ * 通用请求函数 - 使用 axios
+ * @param url 请求路径
+ * @param options 请求配置
+ * @returns Promise<T> 返回数据
+ */
+export async function request<T = any>(url: string, options: AxiosRequestConfig = {}): Promise<T> {
   const token = getAccessToken();
   const host = 'https://devapi.konsoft.top';
-  const res = await fetch(host + url, {
-    ...options,
+
+  // 创建 axios 实例
+  const instance = axios.create({
+    baseURL: host,
+    timeout: 10000, // 10秒超时
     headers: {
-      ...(options.headers || {}),
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
+      ...options.headers,
     },
   });
-  if (!res.ok) throw new Error('请求失败');
-  return res.json() as Promise<T>;
+
+  try {
+    const response: AxiosResponse<T> = await instance.request({
+      url,
+      method: options.method || 'GET',
+      data: options.data,
+      params: options.params,
+      ...options,
+    });
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // axios 错误处理
+      console.log(error);
+
+      if (error.response) {
+        Toast.show({
+          icon: 'fail',
+          content: error.response?.data?.error?.code,
+        });
+        // 服务器返回错误状态码
+        throw new Error(
+          `请求失败: ${error.response.status} - ${error.response.data?.message || error.message}`,
+        );
+      } else if (error.request) {
+        // 请求已发出但没有收到响应
+        throw new Error('网络连接失败，请检查网络设置');
+      } else {
+        // 请求配置错误
+        throw new Error(`请求配置错误: ${error.message}`);
+      }
+    } else {
+      // 其他错误
+      throw new Error(`未知错误: ${error instanceof Error ? error.message : '未知错误'}`);
+    }
+  }
 }
 
 interface ENV_RESULT {
@@ -29,117 +78,54 @@ interface OBJ_RESULT {
 export async function createOrUpdateCarRoom(data: object) {
   return request<OBJ_RESULT>('/api/snowClub/groupPurchase/createOrUpdateCarRoom', {
     method: 'POST',
-    body: typeof data === 'object' && !(data instanceof FormData) ? JSON.stringify(data) : data, // 自动序列化为 JSON
+    data: data, // axios 会自动处理 JSON 序列化
   });
 }
 // 车团
 export async function createOrUpdateCar(data: object) {
   return request<OBJ_RESULT>('/api/snowClub/groupPurchase/createOrUpdateCar', {
     method: 'POST',
-    body: typeof data === 'object' && !(data instanceof FormData) ? JSON.stringify(data) : data, // 自动序列化为 JSON
+    data: data, // axios 会自动处理 JSON 序列化
   });
 }
 // 房团
 export async function createOrUpdateRoom(data: object) {
   return request<OBJ_RESULT>('/api/snowClub/groupPurchase/createOrUpdateRoom', {
     method: 'POST',
-    body: typeof data === 'object' && !(data instanceof FormData) ? JSON.stringify(data) : data, // 自动序列化为 JSON
+    data: data, // axios 会自动处理 JSON 序列化
   });
 }
 
 // 查询车房团列表
 export interface GroupPurchaseItem {
-  /** 团购项目唯一标识 */
-  id: string;
-  /** 团购标题 */
-  title: string;
-  /** 团购描述 */
-  description: string;
-  /** 目标人数 */
-  targetNumber: number;
-  /** 当前已加入人数 */
+  [x: string]: string | number;
+  carDescription: string;
+  carPrice: number;
+  checkInTime: string;
+  checkOutTime: string;
   currentNumber: number;
-  /** 团购状态：未开始/进行中/已完成/已取消 */
-  status: 'NotStarted' | 'InProgress' | 'Completed' | 'Cancelled';
-  /** 团购类型：车/房/车房 */
-  groupType: 'Car' | 'Room' | 'CarRoom';
-  /** 创建者信息 */
-  creator: {
-    /** 额外属性 */
-    extraProperties: {
-      additionalProp1?: string;
-      additionalProp2?: string;
-      additionalProp3?: string;
-    };
-    /** 用户ID */
-    id: string;
-    /** 创建时间 */
-    creationTime: string;
-    /** 创建者ID */
-    creatorId: string;
-    /** 最后修改时间 */
-    lastModificationTime: string;
-    /** 最后修改者ID */
-    lastModifierId: string;
-    /** 是否已删除 */
-    isDeleted: boolean;
-    /** 删除者ID */
-    deleterId?: string;
-    /** 删除时间 */
-    deletionTime?: string;
-    /** 租户ID */
-    tenantId?: string;
-    /** 用户名 */
-    userName: string;
-    /** 名字 */
-    name: string;
-    /** 姓氏 */
-    surname: string;
-    /** 邮箱 */
-    email: string;
-    /** 邮箱是否已确认 */
-    emailConfirmed: boolean;
-    /** 手机号 */
-    phoneNumber: string;
-    /** 手机号是否已确认 */
-    phoneNumberConfirmed: boolean;
-    /** 是否激活 */
-    isActive: boolean;
-    /** 是否启用锁定 */
-    lockoutEnabled: boolean;
-    /** 登录失败次数 */
-    accessFailedCount: number;
-    /** 锁定结束时间 */
-    lockoutEnd?: string;
-    /** 并发戳 */
-    concurrencyStamp: string;
-    /** 实体版本 */
-    entityVersion: number;
-    /** 最后密码修改时间 */
-    lastPasswordChangeTime: string;
-  };
-  /** 创建时间 */
-  creationTime: string;
-  /** 创建者ID */
-  creatorId: string;
-  /** 最后修改时间 */
-  lastModificationTime: string;
-  /** 最后修改者ID */
-  lastModifierId: string;
-  /** 是否已删除 */
-  isDeleted: boolean;
-  /** 删除者ID */
-  deleterId?: string;
-  /** 删除时间 */
-  deletionTime?: string;
-  /** 租户ID */
-  tenantId?: string;
+  departureTime: string;
+  description: string;
+  endLocation: string;
+  groupType: 'CarAndRoom' | 'Car' | 'Room';
+
+  remarks: string;
+  returnTime: string;
+  roomDescription: string;
+  roomLocation: string;
+  roomName: string;
+  roomPrice: number;
+  startLocation: string;
+  status: keyof typeof GROUP_STATUS;
+  targetNumber: number;
+  title: string;
+  vehicleType: string;
 }
 
 /** 团购列表查询结果 */
 export interface GROUP_RESULT {
   /** 团购项目列表 */
-  data: GroupPurchaseItem[];
+  items: GroupPurchaseItem[];
   /** 总数量 */
   totalCount?: number;
   /** 每页大小 */
@@ -148,10 +134,39 @@ export interface GROUP_RESULT {
   pageIndex?: number;
 }
 
-/**
- * 查询团购列表
- * @returns 返回团购列表数据，包含分页信息
- */
-export const queryGroupList = async (): Promise<GROUP_RESULT> => {
-  return request<GROUP_RESULT>('/api/snowClub/groupPurchase/getGroupPurchasePageResult');
+// 获取所有发团
+export const queryGroupList = async (params?: any): Promise<GROUP_RESULT> => {
+  return request<GROUP_RESULT>('/api/snowClub/groupPurchase/getGroupPurchasePageResult', {
+    params: params, // 使用 params 而不是 body，因为是 GET 请求
+  });
+};
+// 获取我发布的团
+export const queryMeGroupList = async (params?: any): Promise<GROUP_RESULT> => {
+  return request<GROUP_RESULT>('/api/snowClub/groupPurchase/getMyGroupPurchase', {
+    params: params, // 使用 params 而不是 body，因为是 GET 请求
+  });
+};
+// 获取团详情
+export const queryGroupByID = async (params: { id: string }): Promise<GroupPurchaseItem> => {
+  return request('/api/snowClub/groupPurchase/getGroupPurchase/' + params.id, {
+    params: params, // 使用 params 而不是 body，因为是 GET 请求
+  });
+};
+// 删除团
+export const deleteSkiResort = async (params: { id: string | number }): Promise<void> => {
+  return request('/api/snowClub/skiResort/' + params.id + '/delete', {
+    method: 'DELETE',
+  });
+};
+// 加入拼团
+export const joinGroupPurchase = async (params: { id: string | number }): Promise<void> => {
+  return request('/api/snowClub/groupPurchase/join/' + params.id, {
+    method: 'POST',
+  });
+};
+//获取我加入的团
+export const queryMyGroupPurchase = async (): Promise<void> => {
+  return request('/api/snowClub/groupPurchase/getMyGroupPurchase', {
+    method: 'GET',
+  });
 };
